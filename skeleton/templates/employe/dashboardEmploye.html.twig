@@ -1,0 +1,23 @@
+{% block body%}
+
+{% if succes != null %}
+<span>{{succes}}</span> <br> <br>
+{%endif%}
+{% if formations%}
+
+{%for formation in formations%}
+
+<span> La date de la formation : {{formation.datedebut|date("d:m:Y")}}</span> <br>
+<span>Nombre d'heure de la formation : {{formation.nbheures }}</span> <br>
+<span>Département de la formation : {{formation.departement}}</span> <br>
+<span>libelle de la formation : {{formation.produit.libelle}}</span> <br>
+
+<a href="{{path('app_add_inscription', {'id':formation.id})}}">ajouter</a> <br>
+
+
+
+
+{%endfor%}
+{%endif%}
+
+{% endblock %}

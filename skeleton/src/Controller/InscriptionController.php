@@ -41,11 +41,11 @@ final class InscriptionController extends AbstractController
                     $inscription -> setFormation($formation);
                     $doctrine -> getManager() -> persist($inscription);
                     $doctrine -> getManager() -> flush();
-                    $session -> set('succes', 'Formation bien ajouter');
+                    $session -> set('succes' , 'formation ajouter');
                     return $this->redirectToRoute('app_Dashboard_employe');
                 }
                 else {
-                    $session -> set('succes' , 'Vous etes deja inscrit');
+                    $session -> set('succes' , 'formation deja ajouter');
                     return $this->redirectToRoute('app_Dashboard_employe');
 
                 }
@@ -83,4 +83,3 @@ final class InscriptionController extends AbstractController
             return $this-> redirectToRoute('app_Dashboard_admin');
     }
 }
-

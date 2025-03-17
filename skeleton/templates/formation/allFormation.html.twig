@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+
+<body class="body-allformation">
+
+
+<div class="link-admin">
+<div class="div-link1">
+<a href="{{path('app_Dashboard_admin')}}">Dashboard</a>
+</div>
+<div class="div-link2">
+<a href="{{path('app_afficher_all_formation')}}">Aller aux formations</a>
+</div>
+</div>
+
+
+        {% if app.session.get('succes') is not null %}
+            <div class="message-container">
+                <div class="alert alert-success">
+                    {{ app.session.get('succes') }}
+                </div>
+            </div>
+            {% do app.session.remove('succes') %} {# Supprime après affichage #}
+        {% endif %}
+
+
+<div class="title-allFormation">
+<h1>Liste de toutes les formations ajoutées :</h1>
+</div>
+
+<div class="container-allFormation">
+{% for formation in allformation %}
+    <div class="container-formation">
+        <h3>Nom de la formation : {{ formation.produit.libelle }}</h3>
+        <p>Date de debut de la formation : {{ formation.datedebut|date("d:m:Y") }}</p>
+        <p>Nombre d'heures de la formation : {{ formation.nbheures}}</p>
+        <p>Département de la formation : {{ formation.departement}}</p>
+        <p>Déscription de la formation : {{ formation.resume}}</p>
+
+        <a href="{{ path('app_deleteFormation', {'id': formation.id}) }}" class="btn-add">Supprimer</a>
+
+    </div>
+{% else %}
+    <p>Aucune formation trouvée.</p>
+{% endfor %}
+</div>
+
+
+
+<script>
+    // Rafraîchir la page après soumission du formulaire
+    document.addEventListener("DOMContentLoaded", function() {
+        let form = document.querySelector("form"); // Sélection du formulaire
+        if (form) {
+            form.addEventListener("submit", function() {
+                setTimeout(function() {
+                    location.reload();
+                }, 2000); // Attendre 1 seconde avant de recharger
+            });
+        }
+    });
+</script>
+
+</body>
+
+{% endblock %}

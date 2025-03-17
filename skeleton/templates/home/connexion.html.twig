@@ -1,6 +1,43 @@
-{% if error != null%}
-<span>{{error}}</span>
-{%endif%}
+{% extends 'base.html.twig' %}
 
-{{form (formConnexion)}}
+{% block body %}
+<body class="body-connexion">
 
+
+    <div class="container">
+
+
+    <div class="connexion-container-left">
+       
+    </div>
+
+
+    <div class="connexion-container-right">
+        
+    <div class="connexion-content">  
+        <div class="connexion-header">
+            <h1 class="connexion-title">Connexion</h1>
+        </div>          
+            <div class="form-container">
+                {{ form_start(formConnexion, {'attr': {'class': 'connexion-form', 'data-turbo': 'false'}}) }}
+                    <div class="form-group">
+                        {{ form_row(formConnexion.login, {'attr': {'class': 'connexion-input username-input'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(formConnexion.mdp, {'attr': {'class': 'connexion-input password-input'}}) }}
+                    </div>
+                    <div class="form-submit">
+                        {{ form_row(formConnexion.submit, {'attr': {'class': 'connexion-button'}}) }}
+                    </div>
+                {{ form_end(formConnexion) }}
+            {% if error is defined and error is not same as(null) %}
+                <div class="error-container">
+                    <span class="error-message">{{ error }}</span>
+                </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+{% endblock %}

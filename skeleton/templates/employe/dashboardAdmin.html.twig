@@ -1,24 +1,77 @@
-{{form(formFormation)}}
+{% extends 'base.html.twig' %}
 
-{% if allInscription != null%}
+{% block body %}
 
-{% for inscription in allInscription%}
+<body class="body-admin">
 
-<span> La date de la inscription : {{inscription.formation.datedebut|date("d:m:Y")}}</span> <br>
-<span>Nombre d'heure de la inscription : {{inscription.formation.nbheures }}</span> <br>
-<span>Département de la inscription : {{inscription.formation.departement}}</span> <br>
-<span>libelle de la inscription : {{inscription.formation.produit.libelle}}</span> <br>
-<span>Statut de l'inscription : {{inscription.statut}}</span> <br>
-<span>Nom et prenom Employe {{inscription.employe.nom}} {{inscription.employe.prenom}}</span> <br>
+<div class="link-admin">
+<div class="div-link1">
+<a href="{{path('app_Dashboard_admin')}}">Dashboard</a>
+</div>
+<div class="div-link2">
+<a href="{{path('app_afficher_all_formation')}}">Aller aux formations</a>
+</div>
+</div>
+
+<div class="container-principal-admin">
+  
+    <div class="form-wrapper">
+    <h3 class="titre-form-admin"> Ajouter une formation </h3>
+        <div class="form-container-ajoutFormAdmin">
+            {{ form(formFormation) }}
+        </div>
+
+ 
+        {% if app.session.get('succes') is not null %}
+            <div class="message-container">
+                <div class="alert alert-success">
+                    {{ app.session.get('succes') }}
+                </div>
+            </div>
+            {% do app.session.remove('succes') %} {# Supprime après affichage #}
+        {% endif %}
+    </div>
 
 
-<a href="{{path('app_gestionInscription', {'statut': 0 , 'inscriptionId': inscription.formation.id})}}">Refuser</a> <br>
-<a href="{{path('app_gestionInscription', {'statut': 1 , 'inscriptionId': inscription.formation.id})}}">Accepter</a> <br>
+    {% if allInscription is not null %}
+        <div class="inscriptions-list">
+            {% for inscription in allInscription %}
+                <div class="inscription-card">
+                    <p><strong>Date de l'inscription :</strong> {{ inscription.formation.datedebut|date("d:m:Y") }}</p>
+                    <p><strong>Nombre d'heures :</strong> {{ inscription.formation.nbheures }}</p>
+                    <p><strong>Département :</strong> {{ inscription.formation.departement }}</p>
+                    <p><strong>Libellé :</strong> {{ inscription.formation.produit.libelle }}</p>
+                    <p><strong>Statut :</strong> {{ inscription.statut }}</p>
+                    <p><strong>Employé :</strong> {{ inscription.employe.nom }} {{ inscription.employe.prenom }}</p>
+                    <br>
+                    
+                    <div class="actions">
+                        <a href="{{ path('app_gestionInscription', {'statut': 0, 'inscriptionId': inscription.id}) }}" class="btn refuse">Refuser</a>
+                        <a href="{{ path('app_gestionInscription', {'statut': 1, 'inscriptionId': inscription.id}) }}" class="btn accept">Accepter</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
 
-{%endfor%}
-{%endif%}
+
+
+<script>
+    // Rafraîchir la page après soumission du formulaire
+    document.addEventListener("DOMContentLoaded", function() {
+        let form = document.querySelector("form"); // Sélection du formulaire
+        if (form) {
+            form.addEventListener("submit", function() {
+                setTimeout(function() {
+                    location.reload();
+                }, 2000); // Attendre 1 seconde avant de recharger
+            });
+        }
+    });
+</script>
 
 
 
-
-
+</body>
+{% endblock %}

@@ -23,7 +23,7 @@ final class HomeController extends AbstractController
         return $this->redirectToRoute('app_connexion');
     }
 
-    #[Route('connexion' , name:'app_connexion')]
+    #[Route('/connexion' , name:'app_connexion')]
     public function connexion(Session $session , ManagerRegistry $doctrine , Request $request)
     {
         $formConnexion = $this->createForm(ConnexionType::class);
@@ -45,16 +45,17 @@ final class HomeController extends AbstractController
             }
 
             else {
-                return $this->render('home/connexion.html.twig' , [
-                    'formConnexion' => $formConnexion -> createView(),
+                return $this->render('home/connexion.html.twig', [
+                    'formConnexion' => $formConnexion->createView(),
                     'error' => 'Login ou mdp incorrect'
-                ]);
+                ], new Response(null, 422)); // Ajouter ce statut
             }
 
         }
         else {
             return $this->render('home/connexion.html.twig' , [
-                'formConnexion' => $formConnexion -> createView(), 'error' => null
+                'formConnexion' => $formConnexion -> createView(), 
+                'error' => null
             ]);
         }
     }

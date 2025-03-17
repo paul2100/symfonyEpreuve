@@ -1,23 +1,56 @@
-{% block body%}
+{% extends 'base.html.twig' %}
 
-{% if succes != null %}
-<span>{{succes}}</span> <br> <br>
-{%endif%}
-{% if formations%}
+{% block body %}
+<body class="body-employe">
+    <div class="link-admin">
+        <div class="div-link1">
+            <a href="{{ path('app_Dashboard_employe') }}">Dashboard</a>
+        </div>
+    </div>
 
-{%for formation in formations%}
+    
+    {# Affichage du message de succès si il existe #}
+    {% if succes is not null %}
+        <div id="success-message" class="alert alert-success">
+            {{ succes }}  {# Affichage de l'alerte dans la page #}
+        </div>
+    {% endif %}
 
-<span> La date de la formation : {{formation.datedebut|date("d:m:Y")}}</span> <br>
-<span>Nombre d'heure de la formation : {{formation.nbheures }}</span> <br>
-<span>Département de la formation : {{formation.departement}}</span> <br>
-<span>libelle de la formation : {{formation.produit.libelle}}</span> <br>
+    <div class="title-employe">
+    <h1> Liste des formations disponible : </h1>
+    </div>
 
-<a href="{{path('app_add_inscription', {'id':formation.id})}}">ajouter</a> <br>
+    <div class="container-principal-employe">
+        <div class="formations-container">
+            {% if formations %}
+                {% for formation in formations %}
+                    <div class="formation-card">
+                        <p class="formation-title"><strong>Libellé :</strong> {{ formation.produit.libelle }}</p>
+                        <p class="formation-date"><strong>Date :</strong> {{ formation.datedebut|date("d:m:Y") }}</p>
+                        <p class="formation-hours"><strong>Heures :</strong> {{ formation.nbheures }}</p>
+                        <p class="formation-department"><strong>Département :</strong> {{ formation.departement }}</p>
+                        
+                        <div class="inscription-link">
+                            <a href="{{ path('app_add_inscription', {'id': formation.id}) }}" class="btn-add">Ajouter</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
 
-
-
-
-{%endfor%}
-{%endif%}
-
+    <script>
+        // Solution plus directe pour masquer le message
+        document.addEventListener("DOMContentLoaded", function() {
+            const successMessage = document.getElementById("success-message");
+            if (successMessage) {
+                // Supprimer immédiatement le message de la session en redirigeant
+                setTimeout(function() {
+                    // Redirection vers la même page mais sans le message en session
+                    window.location.href = "{{ path('app_Dashboard_employe') }}";
+                }, 1500); // Attendre 1.5 secondes avant la redirection
+            }
+        });
+    </script>
+</body>
 {% endblock %}

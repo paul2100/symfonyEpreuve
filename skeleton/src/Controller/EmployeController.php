@@ -28,39 +28,35 @@ final class EmployeController extends AbstractController
 
     #[Route('/ap_admin' , name:'app_Dashboard_admin')]
     public function goToAdmin(Session $session , ManagerRegistry $doctrine , Request $request){
-        
-        $employe = $session -> get('employe');
     
-
+        $employe = $session->get('employe');
+    
         if ($employe) { 
             
-            $allInscription = $doctrine -> getRepository(Inscription::class) -> findAll(); 
-
-            $formFormation = $this->createForm(FormationType::class);
-            $formFormation -> handleRequest($request);
-
-            if ($formFormation -> isSubmitted() && $formFormation -> isValid()) {
-                $formationData = $formFormation -> getData();
-                $doctrine -> getManager() -> persist($formationData);
-                $doctrine -> getManager() -> flush();
-                return $this-> render('employe/dashboardAdmin.html.twig' , [
-                    'formFormation' => $formFormation -> createView() , 
-                    'allInscription' => $allInscription
-                ]);
-            }
-            else {
-                return $this-> render('employe/dashboardAdmin.html.twig' , [
-                    'formFormation' => $formFormation -> createView()  ,
-                    'allInscription' => $allInscription
-                ]);
-            }
-        }
-        else {
-            return $this-> redirectToRoute('app_connexion');
-        }
+            $allInscription = $doctrine->getRepository(Inscription::class)->findAll(); 
     
-
+            $formFormation = $this->createForm(FormationType::class);
+            $formFormation->handleRequest($request);
+    
+            if ($formFormation->isSubmitted() && $formFormation->isValid()) {
+                $formationData = $formFormation->getData();
+                $doctrine->getManager()->persist($formationData);
+                $doctrine->getManager()->flush();
+                $session->set('succes', 'Formation ajoutée avec succès !');
+                return $this->redirectToRoute('app_Dashboard_admin');
+            }
+    
+            return $this->render('employe/dashboardAdmin.html.twig', [
+                'formFormation' => $formFormation->createView(),
+                'allInscription' => $allInscription,
+                'succes' => $session->get('succes')
+            ]);
+        } 
+        else {
+            return $this->redirectToRoute('app_connexion');
+        }
     }
+    
 
 
 
@@ -68,32 +64,27 @@ final class EmployeController extends AbstractController
 
 
     #[Route('/ap_employe' , name:'app_Dashboard_employe')]
-    public function goToEmploye(Session $session , ManagerRegistry $doctrine , Request $request){
+public function goToEmploye(Session $session, ManagerRegistry $doctrine, Request $request){
+    $employe = $session->get('employe');
 
-        $employe = $session -> get('employe');
-        if($session -> get('succes')!= null) {
-            $succes = $session -> get('succes');
-        } else {
-            $succes = null;
-            $session -> set('succes' , $succes);
-        }
-
-
-
-        if ($employe) {
-            $formations = $doctrine ->getRepository(Formation::class) -> findAll();
-            //$inscription = $doctrine ->getRepository(Inscription::class) -> findBy(['employe' => $employe, 'formations' => $formations]);
-            return $this-> render('employe/dashboardEmploye.html.twig' , [
-                'formations' => $formations , 
-                'succes' => $succes
-            ]);
-        }
-        else {
-
-        return $this-> redirectToRoute('app_connexion');
-
-        }
-
+    // Vérifier et obtenir le message de succès
+    $succes = $session->get('succes');
+    
+    if ($succes) {
+        // Une fois le message récupéré, le supprimer de la session pour qu'il ne réapparaisse pas après le rechargement
+        $session->remove('succes');
     }
+
+    if ($employe) {
+        $formations = $doctrine->getRepository(Formation::class)->findAll();
+        return $this->render('employe/dashboardEmploye.html.twig', [
+            'formations' => $formations, 
+            'succes' => $succes // Le message de succès est passé à la vue
+        ]);
+    } else {
+        return $this->redirectToRoute('app_connexion');
+    }
+}
+
 
 }

@@ -1,6 +1,6 @@
 Bonjour,
 
-Ce projet est sur le framework Symfony en version 7.2.4 sous PHP version 8.3.8
+Ce projet est sur le framework Symfony en version 7.2.4 sous PHP version 8.4.1
 
 Dans les fichiers fournis vous retrouverez :
 
